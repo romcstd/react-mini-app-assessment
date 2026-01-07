@@ -6,6 +6,7 @@ import {
   PageNotFound,
   ProjectNotFound,
   PostsPage,
+  ProductsPage
 } from './pages';
 import { Header } from './components/header';
 import { Footer } from './components/footer';
@@ -24,6 +25,7 @@ export default function App() {
               <Route path="*" element={<PageNotFound />} />
               <Route path="/project-not-found" element={<ProjectNotFound />} />
               <Route path="/posts" element={<PostsPage />} />
+              <Route path="/products" element={<ProductsPage />} />
             </Routes>
           </main>
           <Footer />

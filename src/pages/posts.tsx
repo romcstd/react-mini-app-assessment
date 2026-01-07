@@ -49,7 +49,7 @@ export const PostsPage = () => {
 
   return (
     <>
-      <h1 className="mb-4 text-4xl font-bold">Posts</h1>
+      <h1 className="mb-4 text-3xl sm:text-4xl font-bold">Posts</h1>
       <div className="mb-4">
         <p className="mb-4">
           {loading ? (
@@ -65,7 +65,7 @@ export const PostsPage = () => {
             <button
               onClick={goToPrev}
               disabled={page === 1}
-              className="rounded-md border px-6 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+              className="rounded-md border px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
             >
               Prev
             </button>
@@ -73,7 +73,7 @@ export const PostsPage = () => {
             <button
               onClick={goToNext}
               disabled={page === totalPages}
-              className="rounded-md border px-6 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+              className="rounded-md border px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
             >
               Next
             </button>
@@ -83,10 +83,10 @@ export const PostsPage = () => {
 
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {currentItems.map((post) => (
-          <div key={post.id} className="rounded-xl border p-4">
-            <span>{post.id}</span>
-            <h2 className="mb-4 text-lg font-semibold capitalize">
-              {post.title}
+          <div key={post.id} className="rounded-xl border p-4 space-y-4">
+            
+            <h2 className="text-lg font-semibold capitalize">
+              <span>{post.id}.</span> {post.title}
             </h2>
             <p>{post.body}</p>
           </div>
