@@ -12,7 +12,7 @@ export const PostsPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [page, setPage] = useState<number>(1);
-  const [totalPosts] = useState<number>(10);
+  const [postsPerPage] = useState<number>(10);
 
   useEffect(() => {
     fetchPosts();
@@ -22,24 +22,26 @@ export const PostsPage = () => {
     setLoading(true);
     try {
       const res = await fetch('https://jsonplaceholder.typicode.com/posts');
-      if (!res.ok) {
-        throw new Error('Failed to fetch posts. Please try again.');
-      }
+      if (!res.ok) throw new Error('Failed to fetch posts. Please try again.');
       const data: Post[] = await res.json();
       setPosts(data);
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      }
+      if (error instanceof Error) setError(error.message);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  const totalPages = Math.ceil(posts.length / totalPosts);
-  const lastItem = page * totalPosts;
-  const firstItem = lastItem - totalPosts;
-  const currentItems = posts.slice(firstItem, lastItem);
+  // Math.ceil rounds up to the nearest whole number
+  // Math.min returns the smallest value from the numbers
+  // Math.max returns the largest value from the numbers
+  // array slice returns a new array
+
+  const totalPosts = posts.length; // 100 posts
+  const totalPages = Math.ceil(totalPosts / postsPerPage); // 10 pages
+  const firstItem = (page - 1) * postsPerPage + 1; // (1 - 1) * 10 + 1 = 1
+  const lastItem = Math.min(page * postsPerPage, totalPosts); // (1 * 10) = 10
+  const currentItems = posts.slice(firstItem - 1, lastItem); // (0, 10)
   const goToPrev = () => setPage((p) => Math.max(p - 1, 1));
   const goToNext = () => setPage((p) => Math.min(p + 1, totalPages));
 
@@ -54,8 +56,7 @@ export const PostsPage = () => {
             <>Loading posts. Please wait.</>
           ) : (
             <>
-              You’re on page {page} of {totalPages} , showing posts{' '}
-              {firstItem + 1} - {lastItem} out of {posts.length}.
+              {`Showing page ${page} of ${totalPages}, ${firstItem} - ${lastItem} out of ${totalPosts} posts.`}
             </>
           )}
         </p>
