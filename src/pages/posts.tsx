@@ -15,29 +15,26 @@ export const PostsPage = () => {
   const [totalPosts] = useState<number>(10);
 
   useEffect(() => {
-    let timeout: ReturnType<typeof setTimeout>;
-    async function fetchPosts() {
-      try {
-        setLoading(true);
-        const res = await fetch('https://jsonplaceholder.typicode.com/posts');
-        if (!res.ok) {
-          throw new Error('Failed to fetch posts. Please try again.');
-        }
-        const data: Post[] = await res.json();
-        timeout = setTimeout(() => {
-          setPosts(data);
-          setLoading(false);
-        }, 300);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        }
-      }
-    }
-
     fetchPosts();
-    return () => clearTimeout(timeout);
   }, []);
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts');
+      if (!res.ok) {
+        throw new Error('Failed to fetch posts. Please try again.');
+      }
+      const data: Post[] = await res.json();
+      setPosts(data);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const totalPages = Math.ceil(posts.length / totalPosts);
   const lastItem = page * totalPosts;
