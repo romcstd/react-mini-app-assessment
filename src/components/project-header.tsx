@@ -12,7 +12,7 @@ export const ProjectHeader: React.FC<ProjectHeaderProps> = ({
 }) => {
   return (
     <div className="mb-8 flex flex-col sm:flex-row sm:justify-between sm:gap-8">
-      <h2 className="mb-4 text-4xl font-bold sm:mb-0 sm:text-5xl">Projects</h2>
+      <h2 className="mb-4 text-3xl font-bold sm:mb-0 sm:text-4xl">Projects</h2>
       <div role="search" className="relative w-full max-w-sm sm:w-auto">
         <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-zinc-400" />
         <label htmlFor="search" className="sr-only">
