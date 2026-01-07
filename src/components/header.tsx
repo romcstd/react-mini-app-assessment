@@ -9,7 +9,7 @@ export const Header: React.FC = () => {
           <h1 className="text-xl font-bold text-zinc-100 sm:text-2xl">
             <Link to="/">React Mini-App Assessment</Link>
           </h1>
-          <ul className="flex gap-4 text-zinc-50">
+          <ul className="flex gap-8 text-zinc-50">
             <li>
               <Link to="/projects" className="">
                 Projects
@@ -18,6 +18,11 @@ export const Header: React.FC = () => {
             <li>
               <Link to="/posts" className="">
                 Posts
+              </Link>
+            </li>
+            <li>
+              <Link to="/products" className="">
+                Products
               </Link>
             </li>
           </ul>

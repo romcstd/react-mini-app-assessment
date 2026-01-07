@@ -1,9 +1,7 @@
-import type React from 'react';
-
-export const ProjectCardSkeleton: React.FC = () => {
+export const ProductCardSkeleton = () => {
   return (
     <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {Array.from({ length: 12 }).map((_, i) => (
+      {Array.from({ length: 10 }).map((_, i) => (
         <div
           key={i}
           className="flex animate-pulse flex-col justify-between rounded-xl border border-zinc-400 bg-zinc-300 p-6 sm:p-8 dark:bg-zinc-400"
