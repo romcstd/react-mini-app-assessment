@@ -14,12 +14,13 @@ Goal: Build a tiny React app that lists items (e.g., “Projects” or “Tasks�
 - ESLint & Prettier
 
 ## Core expectations
+
 - Modern React (v18+), Vite.
 - Functional components + hooks.
 - One custom hook (e.g., useProjects()).
 - Basic routing for list → details.
 - A controlled form input for filtering.
-- A11y: at least one aria-* attribute.
+- A11y: at least one aria-\* attribute.
 - A minimal test.
 - Readme with run instructions.
 
@@ -54,3 +55,4 @@ npm run build
 
 # 9 Preview the production build
 npm run preview
+```
