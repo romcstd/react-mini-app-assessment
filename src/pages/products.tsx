@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams, Navigate } from 'react-router-dom';
 import { ProductCardSkeleton } from '../components/product-card-skeleton';
+import { ProductsNotFound } from '../components/products-not-found';
 
 interface Product {
   id: number;
@@ -10,10 +12,14 @@ interface Product {
 }
 
 export const ProductsPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = Number(searchParams.get('page')) || 1;
+  const pageParam = Number(searchParams.get('page'));
+
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
-  const [page, setPage] = useState<number>(1);
+  // const [page, setPage] = useState<number>(1);
   const [totalProduct, setTotalProduct] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [productPerPage] = useState<number>(10);
@@ -66,27 +72,40 @@ export const ProductsPage = () => {
     fetchProducts();
   }, [page, productPerPage, cache]);
 
-  const goToPrev = () => setPage((p) => Math.max(p - 1, 1));
-  const goToNext = () => setPage((p) => Math.min(p + 1, totalPages));
+  // const goToPrev = () => setPage((p) => Math.max(p - 1, 1));
+  // const goToNext = () => setPage((p) => Math.min(p + 1, totalPages));
+  const goToPrev = () => {
+  const prevPage = Math.max(page - 1, 1);
+  setSearchParams({ page: String(prevPage) });
+};
+  const goToNext = () => {
+  const nextPage = Math.min(page + 1, totalPages);
+  setSearchParams({ page: String(nextPage) });
+};
 
   if (error) return <p className="text-red-500">{error}</p>;
-  console.log(cache)
+  
+  if (!loading && totalPages > 0 && page > totalPages) return <ProductsNotFound />;
+
+  const isInvalidPage = !pageParam || Number.isNaN(pageParam) || !Number.isInteger(page) || page < 1;
+
+  if (isInvalidPage) return <Navigate to="/products?page=1" replace />;
   return (
     <>
       <h1 className="mb-4 text-3xl font-bold sm:text-4xl">Products</h1>
       <div className="mb-4">
-        <p className="mb-4">{`Showing page ${page} of ${totalPages}, ${firstItem} - ${lastItem} out of ${totalProduct} products.`}</p>
+        <p className="mb-4">{totalProduct > 0 ? `Showing page ${page} of ${totalPages}, ${firstItem} - ${lastItem} out of ${totalProduct} products.` : <div className="animate-pulse h-6 w-84 rounded-md bg-zinc-200 dark:bg-zinc-300"></div>}</p>
         <div className="flex gap-4">
           <button
             onClick={goToPrev}
-            disabled={page === 1}
+            disabled={page === 1 || loading}
             className="rounded-md border px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
           >
             Prev
           </button>
           <button
             onClick={goToNext}
-            disabled={page === totalPages}
+            disabled={page === totalPages || loading}
             className="rounded-md border px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
           >
             Next
@@ -94,7 +113,7 @@ export const ProductsPage = () => {
         </div>
       </div>
       {loading && <ProductCardSkeleton />}
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {products.map((product) => (
           <div
             key={product.id}
