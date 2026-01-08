@@ -30,6 +30,7 @@ export const ProductsPage = () => {
   const lastItem = firstItem + products.length - 1;
 
   useEffect(() => {
+    // const controller = new AbortController();
     const fetchProducts = async () => {
       // Check cache first before get and set to state
       if (cache.has(page)) {
@@ -61,6 +62,7 @@ export const ProductsPage = () => {
         setTotalProduct(json.total);
         setTotalPages(Math.ceil(json.total / productPerPage));
       } catch (error: unknown) {
+        // if (error instanceof DOMException && error.name === 'AbortError') return;
         if (error instanceof Error) setError(error.message);
       } finally {
         setLoading(false);
@@ -68,6 +70,7 @@ export const ProductsPage = () => {
     };
 
     fetchProducts();
+    // return () => controller.abort();
   }, [page, productPerPage, cache]);
 
   // const goToPrev = () => setPage((p) => Math.max(p - 1, 1));
@@ -81,6 +84,11 @@ export const ProductsPage = () => {
     setSearchParams({ page: String(nextPage) });
   };
 
+  // const goToPage = (e: number) => {
+  //   const pageNumber = Math.max(1, Math.min(e, totalPages));
+  //   setSearchParams({ page: String(pageNumber)})
+  // }
+
   if (error) return <p className="text-red-500">{error}</p>;
 
   if (!loading && totalPages > 0 && page > totalPages)
@@ -93,17 +101,31 @@ export const ProductsPage = () => {
     page < 1;
 
   if (isInvalidPage) return <Navigate to="/products?page=1" replace />;
+  
+  const maxButtons = 5;
+  let startPage = Math.max(1, page - Math.floor(maxButtons / 2));
+  let endPage = startPage + maxButtons - 1;
+  if (endPage > totalPages) {
+  endPage = totalPages;
+  startPage = Math.max(1, endPage - maxButtons + 1);
+}
+
+const pageNumbers = [];
+for (let i = startPage; i <= endPage; i++) {
+  pageNumbers.push(i);
+}
+
   return (
     <>
       <h1 className="mb-4 text-3xl font-bold sm:text-4xl">Products</h1>
       <div className="mb-4">
-        <p className="mb-4">
+        <div className="mb-4">
           {totalProduct > 0 ? (
             `Showing page ${page} of ${totalPages}, ${firstItem} - ${lastItem} out of ${totalProduct} products.`
           ) : (
             <div className="h-6 w-84 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-300"></div>
           )}
-        </p>
+        </div>
         <div className="flex gap-4">
           <button
             onClick={goToPrev}
@@ -112,6 +134,18 @@ export const ProductsPage = () => {
           >
             Prev
           </button>
+          {pageNumbers.map((p) => (
+            <button
+            key={p}
+            onClick={() => setSearchParams({ page: String(p) })}
+            className="rounded-md border px-4 py-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+          >
+            {p}
+          </button>
+          ))
+            
+          }
+          
           <button
             onClick={goToNext}
             disabled={page === totalPages || loading}
@@ -123,7 +157,7 @@ export const ProductsPage = () => {
       </div>
       {loading && <ProductCardSkeleton />}
       <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {products.map((product) => (
+        {!loading && products.map((product) => (
           <div
             key={product.id}
             className="space-y-4 rounded-xl border border-zinc-400 p-4"
