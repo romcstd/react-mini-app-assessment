@@ -30,44 +30,42 @@ export const ProductsPage = () => {
   const lastItem = firstItem + products.length - 1;
 
   useEffect(() => {
-
     const fetchProducts = async () => {
-      
-    // Check cache first before get and set to state
-    if (cache.has(page)) {
-      const cacheProducts = cache.get(page);
-      if(cacheProducts) setProducts(cacheProducts);
-      return;
-    }
-    // if (cache[page]) {
-    //   setProducts(cache[page]);
-    //   return;
-    // }
-    setLoading(true);
-    try {
-      const skip = (page - 1) * productPerPage;
-      const response = await fetch(
-        `https://dummyjson.com/products?limit=${productPerPage}&skip=${skip}`,
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch products. Please try again later.');
+      // Check cache first before get and set to state
+      if (cache.has(page)) {
+        const cacheProducts = cache.get(page);
+        if (cacheProducts) setProducts(cacheProducts);
+        return;
       }
-      const json = await response.json();
-      const data: Product[] = await json.products;
-      setProducts(data);
+      // if (cache[page]) {
+      //   setProducts(cache[page]);
+      //   return;
+      // }
+      setLoading(true);
+      try {
+        const skip = (page - 1) * productPerPage;
+        const response = await fetch(
+          `https://dummyjson.com/products?limit=${productPerPage}&skip=${skip}`,
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch products. Please try again later.');
+        }
+        const json = await response.json();
+        const data: Product[] = await json.products;
+        setProducts(data);
 
-      // Store in cache
-      setCache((prev) => new Map(prev).set(page, data));
-      // setCache((prev) => ({ ...prev, [page]: data }));
+        // Store in cache
+        setCache((prev) => new Map(prev).set(page, data));
+        // setCache((prev) => ({ ...prev, [page]: data }));
 
-      setTotalProduct(json.total);
-      setTotalPages(Math.ceil(json.total / productPerPage));
-    } catch (error: unknown) {
-      if (error instanceof Error) setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setTotalProduct(json.total);
+        setTotalPages(Math.ceil(json.total / productPerPage));
+      } catch (error: unknown) {
+        if (error instanceof Error) setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchProducts();
   }, [page, productPerPage, cache]);
@@ -75,26 +73,37 @@ export const ProductsPage = () => {
   // const goToPrev = () => setPage((p) => Math.max(p - 1, 1));
   // const goToNext = () => setPage((p) => Math.min(p + 1, totalPages));
   const goToPrev = () => {
-  const prevPage = Math.max(page - 1, 1);
-  setSearchParams({ page: String(prevPage) });
-};
+    const prevPage = Math.max(page - 1, 1);
+    setSearchParams({ page: String(prevPage) });
+  };
   const goToNext = () => {
-  const nextPage = Math.min(page + 1, totalPages);
-  setSearchParams({ page: String(nextPage) });
-};
+    const nextPage = Math.min(page + 1, totalPages);
+    setSearchParams({ page: String(nextPage) });
+  };
 
   if (error) return <p className="text-red-500">{error}</p>;
-  
-  if (!loading && totalPages > 0 && page > totalPages) return <ProductsNotFound />;
 
-  const isInvalidPage = !pageParam || Number.isNaN(pageParam) || !Number.isInteger(page) || page < 1;
+  if (!loading && totalPages > 0 && page > totalPages)
+    return <ProductsNotFound />;
+
+  const isInvalidPage =
+    !pageParam ||
+    Number.isNaN(pageParam) ||
+    !Number.isInteger(page) ||
+    page < 1;
 
   if (isInvalidPage) return <Navigate to="/products?page=1" replace />;
   return (
     <>
       <h1 className="mb-4 text-3xl font-bold sm:text-4xl">Products</h1>
       <div className="mb-4">
-        <p className="mb-4">{totalProduct > 0 ? `Showing page ${page} of ${totalPages}, ${firstItem} - ${lastItem} out of ${totalProduct} products.` : <div className="animate-pulse h-6 w-84 rounded-md bg-zinc-200 dark:bg-zinc-300"></div>}</p>
+        <p className="mb-4">
+          {totalProduct > 0 ? (
+            `Showing page ${page} of ${totalPages}, ${firstItem} - ${lastItem} out of ${totalProduct} products.`
+          ) : (
+            <div className="h-6 w-84 animate-pulse rounded-md bg-zinc-200 dark:bg-zinc-300"></div>
+          )}
+        </p>
         <div className="flex gap-4">
           <button
             onClick={goToPrev}

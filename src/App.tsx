@@ -17,8 +17,10 @@ export default function App() {
       <Router>
         <div className="flex min-h-screen flex-col">
           <Header />
-          <main id="main" className="flex flex-1 flex-col px-6 py-6 sm:px-12 sm:py-12">
-          {/* <main id="main" className="mx-auto flex w-full max-w-screen-2xl flex-1 flex-col gap-16 px-6 py-12 md:py-16"> */}
+          <main
+            id="main"
+            className="flex flex-1 flex-col px-6 py-6 sm:px-12 sm:py-12"
+          >
             <Routes>
               <Route path="*" element={<PageNotFound />} />
               <Route path="/" element={<DashboardPage />} />
@@ -26,7 +28,6 @@ export default function App() {
               <Route path="/project/:slug" element={<ProjectDetailsPage />} />
               <Route path="/project-not-found" element={<ProjectNotFound />} />
               <Route path="/posts" element={<PostsPage />} />
-              <Route path="/products" element={<ProductsPage />} />
               <Route path="/products" element={<ProductsPage />} />
             </Routes>
           </main>
