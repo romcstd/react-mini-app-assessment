@@ -49,7 +49,7 @@ export const PostsPage = () => {
 
   return (
     <>
-      <h1 className="mb-4 text-3xl sm:text-4xl font-bold">Posts</h1>
+      <h1 className="mb-4 text-3xl font-bold sm:text-4xl">Posts</h1>
       <div className="mb-4">
         <p className="mb-4">
           {loading ? (
@@ -83,8 +83,7 @@ export const PostsPage = () => {
 
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {currentItems.map((post) => (
-          <div key={post.id} className="rounded-xl border p-4 space-y-4">
-            
+          <div key={post.id} className="space-y-4 rounded-xl border p-4">
             <h2 className="text-lg font-semibold capitalize">
               <span>{post.id}.</span> {post.title}
             </h2>
